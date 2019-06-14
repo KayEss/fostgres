@@ -108,7 +108,16 @@ std::pair<boost::shared_ptr<fostlib::mime>, int> fostgres::updater::update(
         fostgres::updater::intermediate_data d,
         std::optional<std::size_t> row) {
     auto rel = relation;
-    cnx.update(rel.shrink_to_fit(), d.first, d.second);
+    std::vector<fostlib::string> returning = {"*"};
+    auto rs = cnx.update(rel.shrink_to_fit(), d.first, d.second, returning);
+    auto pos = rs.begin();
+    if (pos == rs.end()) {
+        return {nullptr, 404};
+    } else if (++pos != rs.end()) {
+        throw fostlib::exceptions::not_implemented(
+                __PRETTY_FUNCTION__,
+                "Update for multiple rows not supported by Fostgres");
+    }
     return {nullptr, 0};
 }
 

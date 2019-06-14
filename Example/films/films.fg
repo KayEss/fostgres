@@ -6,7 +6,7 @@
 ## `UPDATE` statements instead of `INSERT` ones. If these don't actually
 ## update anything then we will get a 404 back, denoting that the
 ## resource we're trying to update doesn't exist.
-#PATCH film.slug.error / (module.path.join films.edit.csj) 404
+PATCH film.slug.error / (module.path.join films.edit.csj) 404
 
 
 ## ## Add films normally

@@ -215,14 +215,28 @@ namespace {
                 error = handler.update(linedata, records);
                 break;
             }
-            if (error.first) return error;
+            if (error.first) {
+                return error;
+            } else if (error.second) {
+                switch (error.second) {
+                case 404:
+                    return fostlib::urlhandler::view::execute(
+                            fostlib::json{"fost.response.404"}, "", req,
+                            fostlib::host{});
+                default:
+                    throw fostlib::exceptions::not_implemented(
+                            __PRETTY_FUNCTION__,
+                            "Canned response for this status code",
+                            fostlib::coerce<fostlib::string>(error.second));
+                }
+            }
             ++records;
         }
         cnx.commit();
         fostlib::insert(work_done, "records", records);
         boost::shared_ptr<fostlib::mime> response(new fostlib::text_body(
                 fostlib::json::unparse(work_done, true),
-                fostlib::mime::mime_headers(), L"application/json"));
+                fostlib::mime::mime_headers(), "application/json"));
         return std::make_pair(response, 200);
     }
 
