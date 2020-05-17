@@ -43,7 +43,7 @@ jobs:
             git clone git@github.com:jtv/libpqxx.git .circleci/libpqxx
       - run:
           name: cmake
-          command: cmake -G Ninja -S .circleci -B .circleci -DCMAKE_BUILD_TYPE=<< parameters.variant >> $CMAKE_EXTRA
+          command: cmake -G Ninja -S .circleci -B .circleci -DCMAKE_BUILD_TYPE=<< parameters.variant >>
       - run:
           name: ninja
           command: ninja -j1 -C .circleci
@@ -52,7 +52,9 @@ jobs:
           command: ninja -j1 -C .circleci check
       - run:
           name: postgres tests
-          command: ninja -j1 -C .circleci pgtest
+          command: |
+            pg_ctlcluster 12 main start
+            ninja -j1 -C .circleci pgtest
 
 workflows:
   all-tests:
