@@ -4,14 +4,14 @@ executors:
   clang:
     docker:
     - image: fost/circleci
-      user: fostgres
+      user: postgres
     environment:
       CC: clang
       CXX: clang++
   gcc:
     docker:
     - image: fost/circleci
-      user: fostgres
+      user: postgres
     environment:
       CC: gcc-10
       CXX: g++-10
