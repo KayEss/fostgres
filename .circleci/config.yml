@@ -4,12 +4,14 @@ executors:
   clang:
     docker:
     - image: fost/circleci
+      user: fostgres
     environment:
       CC: clang
       CXX: clang++
   gcc:
     docker:
     - image: fost/circleci
+      user: fostgres
     environment:
       CC: gcc-10
       CXX: g++-10
@@ -27,12 +29,18 @@ jobs:
       - run:
           name: libraries
           command: |
+            git clone git@github.com:hotkit/cord.git .circleci/cord
+            git clone git@github.com:hotkit/fost-base.git .circleci/fost-base
+            git clone git@github.com:hotkit/fost-beanbag.git .circleci/fost-beanbag
             git clone git@github.com:hotkit/fost-boost.git .circleci/boost
             ln -s /opt/fost-boost/boost .circleci/boost/boost
-            git clone git@github.com:hotkit/fost-base.git .circleci/fost-base
             git clone git@github.com:hotkit/fost-crypto.git .circleci/crypto
-            git clone git@github.com:hotkit/cord.git .circleci/cord
+            git clone git@github.com:hotkit/fost-internet.git .circleci/fost-internet
+            git clone git@github.com:hotkit/fost-postgres.git .circleci/fost-postgres
+            git clone git@github.com:hotkit/fost-web.git .circleci/fost-web
+            git clone git@github.com:hotkit/json-schema.git .circleci/json-schema
             git clone git@github.com:hotkit/threading.git .circleci/threading
+            git clone git@github.com:jtv/libpqxx.git .circleci/libpqxx
       - run:
           name: cmake
           command: cmake -G Ninja -S .circleci -B .circleci -DCMAKE_BUILD_TYPE=<< parameters.variant >> $CMAKE_EXTRA
@@ -42,6 +50,9 @@ jobs:
       - run:
           name: check tests
           command: ninja -j1 -C .circleci check
+      - run:
+          name: postgres tests
+          command: ninja -j1 -C .circleci pgtest
 
 workflows:
   all-tests:
