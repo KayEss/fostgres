@@ -14,6 +14,9 @@ The view first goes through the list of end point configurations looking for the
 
 Each end point configuration consists of a number of keys:
 
+* `response` -- The type of API. The URL to database mapping essentially must describe a resource that comprised either one or multiple rows in the relation/table.
+    * `object` -- The URL describes a single row in the database.
+    * `csj` (default) -- The URL describes multiple rows in the database.
 * `path` -- The path configuration to match against
 * `response` -- The type of API. The URL to database mapping essentially must describe a resource that comprised either one or multiple rows in the relation/table.
     * `object` -- The URL describes a single row in the database.
